@@ -26,6 +26,9 @@
 
 require('ak').setup();
 
+init = function(){
+  exports.init();
+};
 
 exports.init = function () {
   rv.Author.create(
@@ -62,7 +65,7 @@ var LoginHandler = Handler.subclass(
     post: function (request) {
       var selection = rv.Author.where({name: request.post.name});
       var author = selection.getOne();
-      if (author.password != request.post.password)
+      if (author.password !== request.post.password) 
         throw Failure('Wrong Password');
       var cookie = Math.random() * 10e16 + '';
       selection.set({cookie: cookie});
