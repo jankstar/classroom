@@ -47,6 +47,14 @@ exports.init = function () {
     });
 };
 
+del = function () {
+  exports.del();
+};
+
+exports.del = function () {
+  rv.Author.del();
+  rv.Post.del();
+};
 
 var IndexHandler = Handler.subclass(
   {
