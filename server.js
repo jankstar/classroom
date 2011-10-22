@@ -126,6 +126,13 @@ fu.get("/", fu.staticHandler("index.html"));
 fu.get("/static/base.css", fu.staticHandler("static/base.css"));
 fu.get("/client.js", fu.staticHandler("client.js"));
 //fu.get("/jquery.min.js", fu.staticHandler("jquery.min.js"));
+fu.get("/isomorphic/system/modules/ISC_Core.js", fu.staticHandler("./isomorphic/system/modules/ISC_Core.js"));
+fu.get("/isomorphic/system/modules/ISC_Foundation.js", fu.staticHandler("./isomorphic/system/modules/ISC_Foundation.js"));
+fu.get("/isomorphic/system/modules/ISC_Containers.js", fu.staticHandler("./isomorphic/system/modules/ISC_Containers.js"));
+fu.get("/isomorphic/system/modules/ISC_Grids.js", fu.staticHandler("./isomorphic/system/modules/ISC_Grids.js"));
+fu.get("/isomorphic/system/modules/ISC_Forms.js", fu.staticHandler("./isomorphic/system/modules/ISC_Forms.js"));
+fu.get("/isomorphic/system/modules/ISC_DataBinding.js", fu.staticHandler("./isomorphic/system/modules/ISC_DataBinding.js"));
+fu.get("/isomorphic/skins/SmartClient/load_skin.js", fu.staticHandler("./isomorphic/skins/SmartClient/load_skin.js"));
 
 
 fu.get("/who", function (req, res) {
@@ -141,6 +148,7 @@ fu.get("/who", function (req, res) {
 });
 
 fu.get("/join", function (req, res) {
+//    debugger;
   var nick = qs.parse(url.parse(req.url).query).nick;
   if (nick == null || nick.length == 0) {
     res.simpleJSON(400, {error: "Bad nick."});
