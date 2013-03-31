@@ -1,0 +1,9 @@
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.swp
+*.swo
+db/classroom
+testing
