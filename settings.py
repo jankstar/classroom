@@ -1,10 +1,16 @@
-# Django settings for mysite project.
+# Django settings for classroom project.
+import os
+gettext = lambda s: s
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+PROJECT = os.path.basename(BASE_DIR)
+
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+     #('name', 'email'),
 )
 
 MANAGERS = ADMINS
@@ -12,7 +18,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/Users/jan/python/db/mysite',  # Or path to database file if using sqlite3.
+        'NAME': os.path.join(BASE_DIR, 'db/classroom'),  # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -70,6 +76,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, 'staticfiles'),
 )
 
 # List of finder classes that know how to find static files in
@@ -99,6 +106,11 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+CACHE_BACKEND = ''
+CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -109,13 +121,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'mysite.urls'
+
+ROOT_URLCONF = 'urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'mysite.wsgi.application'
+#WSGI_APPLICATION = 'classroom.wsgi.application'
 
-TEMPLATE_DIRS = ("/Users/jan/python/mysite",
-                 "/Users/jan/python/Django-1.4.3/django/contrib/databrowse/templates"
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
+    '/Users/jan/python/Django-1.4.3/django/contrib/databrowse/templates',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -128,15 +142,28 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+#    'south',
+#    'registration',
+#    'bootstrap_toolkit',
+#    'sekizai',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
-    'django.contrib.databrowse',
-    #'polls',
-    #'news',
-    'classroom'
+    #'djangorestframework',
+#    'rest_framework',
+    'apps.classroom',
 )
+
+#TEMPLATE_CONTEXT_PROCESSORS = (
+#    "django.contrib.auth.context_processors.auth",
+#    "django.core.context_processors.debug",
+#    "django.core.context_processors.i18n",
+#    "django.core.context_processors.request",
+#    "django.core.context_processors.media",
+#    "django.core.context_processors.static",
+#    "django.contrib.messages.context_processors.messages",
+#    "sekizai.context_processors.sekizai",
+#    str(PROJECT) + ".context_processors.default",
+#)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -166,3 +193,24 @@ LOGGING = {
         },
     }
 }
+
+# users get automatically logged in after activating their accounts
+REGISTRATION_AUTO_LOGIN = True
+
+# number of days account activation emails are valid for. Can be used to
+# clean up inactivated accounts
+ACCOUNT_ACTIVATION_DAYS = 14
+
+# where users should be redirected to log in
+LOGIN_URL = "/accounts/login"
+
+# where to redirect users to after logging in
+LOGIN_REDIRECT_URL = '/classroom/'
+
+# where to redirect users to upon logging out
+LOGOUT_URL = "/"
+
+SESSION_COOKIE_AGE = 60*60
+SESSION_SAVE_EVERY_REQUEST = True
+
+APPEND_SLASH = False
