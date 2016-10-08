@@ -1,5 +1,5 @@
-from apps.classroom.models import Kunde
-from apps.classroom.models import Standort
+from classroom.models import Kunde
+from classroom.models import Standort
 from django.contrib import admin
 
 

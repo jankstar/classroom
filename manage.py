@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 import os
 import sys
-sys.path.append(r'/Applications/eclipse/plugins/org.python.pydev_2.7.0.2013012902/pysrc')
-sys.path.append(r'/Users/jan/python/Django-1.4.3/django')
-
-import pydevd
-pydevd.patch_django_autoreload(patch_remote_debugger=True, patch_show_console=False)
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-
-    from django.core.management import execute_from_command_line
-
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError:
+        # The above import may fail for some other reason. Ensure that the
+        # issue is really that Django is missing to avoid masking other
+        # exceptions on Python 2.
+        try:
+            import django
+        except ImportError:
+            raise ImportError(
+                "Couldn't import Django. Are you sure it's installed and "
+                "available on your PYTHONPATH environment variable? Did you "
+                "forget to activate a virtual environment?"
+            )
+        raise
     execute_from_command_line(sys.argv)

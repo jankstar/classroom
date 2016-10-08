@@ -1,7 +1,6 @@
 # coding=iso-8859-15
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.localflavor.de.forms import DEZipCodeField
 
 # Kunde
 class Kunde(models.Model):
@@ -20,7 +19,7 @@ class Standort(models.Model):
     id_kunde = models.ForeignKey(Kunde)
     name = models.CharField(max_length=40)
     ort = models.CharField(max_length=40)
-    plz = DEZipCodeField(max_length=10)
+    plz = models.IntegerField(max_length=10)
     strasse = models.CharField(max_length=40)
     telefon1 = models.CharField(max_length=40)
     telefon2 = models.CharField(max_length=40)
