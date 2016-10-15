@@ -6,5 +6,7 @@
 *.swp
 *.swo
 *.pyc
-db/classroom
 testing
+db/
+pip*
+local_settings.py
