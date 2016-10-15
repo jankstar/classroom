@@ -19,7 +19,7 @@ class Standort(models.Model):
     id_kunde = models.ForeignKey(Kunde)
     name = models.CharField(max_length=40)
     ort = models.CharField(max_length=40)
-    plz = models.IntegerField(max_length=10)
+    plz = models.IntegerField()
     strasse = models.CharField(max_length=40)
     telefon1 = models.CharField(max_length=40)
     telefon2 = models.CharField(max_length=40)
@@ -27,7 +27,7 @@ class Standort(models.Model):
     bemerkung = models.TextField()
         
     def __unicode__(self):
-        return self.id_kunde + " - " + self.name
+        return self.id_standort + " - " + self.name
     
 class Raum(models.Model):    
     id_raum = models.AutoField(primary_key=True)
@@ -39,17 +39,17 @@ class Raum(models.Model):
     bemerkung = models.TextField()
     
     def __unicode__(self):
-        return self.id_kunde + " - " + self.name
+        return self.id_raum + " - " + self.name
         
-# Schulung: es werden mehrere Kurse durchgefŸhrt
+# Schulung: es werden mehrere Kurse durchgeführt
 class Schulung(models.Model):
     id_schulung = models.AutoField(primary_key=True)
     id_kunde = models.ForeignKey(Kunde)
     name =  models.CharField(max_length=25)
     version = models.IntegerField(default=1)
     beschreibung = models.TextField()
-    start = models.DateField(auto_now=True)
-    ende = models.DateField(auto_now=False)
+    start = models.DateField()
+    ende = models.DateField()
     STATUS = (
               ('01', u'Kurse planen'),
               ('02', u'Termine planen'),
@@ -58,22 +58,21 @@ class Schulung(models.Model):
     status = models.CharField(max_length=2, choices=STATUS)
     
     def __unicode__(self):
-        return self.id_schulung + " - " + self.name + " / " + self.id_kunde + " / " + self.status
-
+        return self.id_schulung + " - " + self.name
+        
 class Kursinhalt(models.Model):
     id_kursinhalt = models.AutoField(primary_key=True)
     id_kunde = models.ForeignKey(Kunde)
     id_schulung = models.ForeignKey(Schulung)
     name =  models.CharField(max_length=25)
     beschreibung = models.TextField()
-    unterlage = models.URLField(verify_exists=False, max_length=200,
-                                help_text= u"Verzeichnis und Unterlage")
+    unterlage = models.URLField(max_length=200, help_text= u'Verzeichnis und Unterlage')
     termin = models.DateTimeField(help_text= u"Termin zur Fertigstellung der druckfertigen Unterlagen")
     STATUS = (
               ('01', u'Kursinhalt planen'),
               ('02', u'Unterlagen druckfertig'))
     status = models.CharField(max_length=2, choices=STATUS) 
-  
+   
     def __unicode__(self):
         return self.id_kursinhalt + " - " + self.name + " / " + self.id_kunde
 
@@ -114,7 +113,7 @@ class Kurs(models.Model):
     id_schulung = models.ForeignKey(Schulung)
     name =  models.CharField(max_length=25)
     beschreibung = models.TextField()
-    id_kursinhalt = models.ManyToManyField(Kursinhalt)
+#    id_kursinhalt = models.ManyToManyField(Kursinhalt)
     id_dozent = models.ManyToManyField(Dozent)
     id_teilnehmergruppe = models.ManyToManyField(Teilnehmergruppe)
     id_raumauswahl = models.ManyToManyField(Raum)
@@ -147,3 +146,5 @@ class Kurstermin(models.Model):
               ('09', u'Termin durchgefŸhrt'))
     status = models.CharField(max_length=2, choices=STATUS)
 
+    def __unicode__(self):
+        return self.id_kurstermin + " - " + self.name + " / " + self.id_kunde + " / " + self.status

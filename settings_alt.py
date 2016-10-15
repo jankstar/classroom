@@ -150,20 +150,20 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     #'djangorestframework',
 #    'rest_framework',
-    'apps.classroom',
+    'classroom',
 )
 
-#TEMPLATE_CONTEXT_PROCESSORS = (
-#    "django.contrib.auth.context_processors.auth",
-#    "django.core.context_processors.debug",
-#    "django.core.context_processors.i18n",
-#    "django.core.context_processors.request",
-#    "django.core.context_processors.media",
-#    "django.core.context_processors.static",
-#    "django.contrib.messages.context_processors.messages",
-#    "sekizai.context_processors.sekizai",
-#    str(PROJECT) + ".context_processors.default",
-#)
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.request",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.contrib.messages.context_processors.messages",
+    "sekizai.context_processors.sekizai",
+    str(PROJECT) + ".context_processors.default",
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
