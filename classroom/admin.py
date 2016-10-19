@@ -24,29 +24,31 @@ class StandortAdmin(admin.ModelAdmin):
     search_fields = ['name', 'strasse']
     fieldsets = [
         (None,          {'fields': ['id_kunde', 'name']}),
-        (_(u'Daten'),   {'fields': ['ort', 'plz', 'strasse','id_ansprechpartner', 'ansp_name', 'telefon1', 'telefon2','bemerkung']})]
+        (_(u'Beschreibung'),   {'classes': ('collapse',),
+                         'fields':[],       
+                         'description': 'Hier steht die Beschreibung'}),
+        (_(u'Daten'),   {'classes': ('extrapretty'),
+                         'fields': [('plz', 'ort'), 'strasse',('id_ansprechpartner', 'ansp_name'), 
+                                    ('telefon1', 'telefon2'),'bemerkung'],
+                         'description': ''})]
     list_display = ['name', 'id_kunde', 'ort', 'plz', 'strasse', 'ansp_name']
     readonly_fields = ['ansp_name']
     ordering = ['id_kunde', 'name']
     inline = [KundeInline]
-    
-    def kunde_name(self,obj):
-        _kunde = Kunde.objects.get(id_kunde=obj.id_kunde)
-        return 'Test' #str(_kunde.id_kunde) + ' ' + _kunde.name + _(u' Status ') + _kunde.status  
-    kunde_name.short_description = _(u'Kunde Name')
-    
+      
     def ansp_name(self,obj):
         _user = User.objects.get(username=obj.id_ansprechpartner)
         return _user.get_full_name() + ' / ' + _user.email
     ansp_name.short_description = _(u'Ansp. Name')
-    
+       
 class StandortInline(admin.TabularInline):
     model = Standort
     extra = 1    
     
 class RaumAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    ordering = ['name']
+    search_fields = ['name']
+    list_display = ['name', 'id_kunde','platze', 'von', 'bis']
+    ordering = ['id_kunde', 'name']
     inline = [KundeInline, StandortInline]    
 
 class RaumInline(admin.TabularInline):
@@ -54,6 +56,9 @@ class RaumInline(admin.TabularInline):
     extra = 1
 
 class SchulungAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ['name', 'id_kunde', 'start', 'ende', 'status']
+    ordering = ['id_kunde', 'name']
     inline = [KundeInline]    
 
 class SchulungInline(admin.TabularInline):
@@ -61,6 +66,9 @@ class SchulungInline(admin.TabularInline):
     extra = 1    
 
 class KursinhaltAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ['name', 'id_kunde', 'termin', 'status']
+    ordering = ['id_kunde', 'name']
     inline = [KundeInline,SchulungInline]    
 
 class KursInline(admin.TabularInline):
@@ -90,7 +98,7 @@ class KursAdmin(admin.ModelAdmin):
 class KursterminAdmin(admin.ModelAdmin):
     inline = [KundeInline, SchulungInline, KursInline, RaumInline, DozentInline]
         
-admin_site = MyAdminSite(name='admin')                    
+#admin_site = MyAdminSite(name='admin')                    
 admin.site.register(Kunde, KundeAdmin)
 admin.site.register(Standort, StandortAdmin)
 admin.site.register(Raum, RaumAdmin)

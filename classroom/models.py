@@ -12,12 +12,16 @@ class Kunde(models.Model):
               ('09', _(u'löschen'))) 
     status = models.CharField(max_length=2, choices=STATUS, default='01', verbose_name=_(u'Status'))
     
+    def __unicode__(self):
+        return str(self.id_kunde) + " - " + self.name
+    
+    def __str__(self):
+        return str(self.id_kunde) + " - " + self.name
+    
     class Meta:
         verbose_name = _(u'Kunde')
         verbose_name_plural = _(u'Kunden')
 
-    def __unicode__(self):
-        return str(self.id_kunde) + " - " + self.name
             
 class Standort(models.Model):
     id_standort = models.AutoField(primary_key=True)
@@ -34,16 +38,8 @@ class Standort(models.Model):
     def __unicode__(self):
         return str(self.id_standort) + ' - ' + self.name
     
-    def kunde(self):
-        _kunde = Kunde.objects.get(id_kunde=self.id_kunde)
-        return str(_kunde.id_kunde) + _kunde.name 
-    kunde.short_description = _(u'Kunde Name')
-        
-    def ansp_name(self):
-        _user = User.objects.get(username=self.id_ansprechpartner)
-        return _user.get_full_name()
-    #ansp_name = property(_ansp_name)
-    ansp_name.short_description = _(u'Ansp. Name')
+    def __str__(self):
+        return str(self.id_standort) + ' - ' + self.name
     
     class Meta:
         verbose_name = _(u'Standort')
@@ -54,17 +50,18 @@ class Raum(models.Model):
     id_kunde = models.ForeignKey(Kunde)
     id_standort = models.ForeignKey(Standort)
     name = models.CharField(max_length=50)
-    von = models.DateField(help_text= _(u"Raum verfüŸgbar ab"), blank=True, null=True)
-    bis = models.DateField(help_text= _(u"Raum verfŸügbar bis"), blank=True, null=True)
+    platze = models.IntegerField(verbose_name= _(u"Plätze"), blank=True, null=True)
+    von = models.DateField(verbose_name= _(u"verfüŸgbar ab"), blank=True, null=True)
+    bis = models.DateField(verbose_name= _(u"verfŸügbar bis"), blank=True, null=True)
     bemerkung = models.TextField(blank=True, null=True)
         
+    def __unicode__(self):
+        return str(self.id_raum) + " - " + self.name
+    
     class Meta:
         verbose_name = _(u'Raum')
         verbose_name_plural = _(u'Räume')
-
-    def __unicode__(self):
-        return str(self.id_raum) + " - " + self.name
-        
+    
 # Schulung: es werden mehrere Kurse durchgeführt
 class Schulung(models.Model):
     id_schulung = models.AutoField(primary_key=True)
@@ -81,13 +78,16 @@ class Schulung(models.Model):
               ('09', _(u'Schulung beendet')))
     status = models.CharField(max_length=2, choices=STATUS, default='01')
     
+    def __unicode__(self):
+        return str(self.id_schulung) + " - " + self.name
+    
+    def __str__(self):
+        return str(self.id_schulung) + " - " + self.name
+    
     class Meta:
         verbose_name = _(u'Schulung')
         verbose_name_plural = _(u'Schulungen')
-
-    def __unicode__(self):
-        return str(self.id_schulung) + " - " + self.name
-        
+       
 class Kursinhalt(models.Model):
     id_kursinhalt = models.AutoField(primary_key=True)
     id_kunde = models.ForeignKey(Kunde)
@@ -112,7 +112,7 @@ class Dozent(models.Model):
     id_dozent = models.AutoField(primary_key=True)
     id_kunde = models.ForeignKey(Kunde)
     id_user = models.ForeignKey(User)
-    von = models.DateField(auto_now=True, help_text= _(u"Dozent ist verfŸügbar von/bis"), blank=True, null=True)
+    von = models.DateField(auto_now=False, help_text= _(u"Dozent ist verfŸügbar von/bis"), blank=True, null=True)
     bis = models.DateField(auto_now=False, blank=True, null=True)
     
     class Meta:
@@ -121,13 +121,17 @@ class Dozent(models.Model):
 
     def __unicode__(self):
         _user = User.objects.get_by_natural_key(self.id_user)
-        return str(self.id_dozent) + " - " + _user.lastname + ", " + _user.firstname
+        return str(self.id_dozent) + " - " + _user.get_full_name()
 
+    def __str__(self):
+        _user = User.objects.get_by_natural_key(self.id_user)
+        return str(self.id_dozent) + " - " + _user.get_full_name()
+    
 class Teilnehmer(models.Model):
     id_teilnehmer = models.AutoField(primary_key=True)
     id_kunde = models.ForeignKey(Kunde)
     id_user = models.ForeignKey(User)
-    von = models.DateField(auto_now=True, help_text= _(u"Teilnehmer ist verfüŸgbar von/bis"), blank=True, null=True)
+    von = models.DateField(auto_now=False, help_text= _(u"Teilnehmer ist verfüŸgbar von/bis"), blank=True, null=True)
     bis = models.DateField(auto_now=False, blank=True, null=True)
     
     class Meta:
@@ -136,7 +140,11 @@ class Teilnehmer(models.Model):
 
     def __unicode__(self):
         _user = User.objects.get_by_natural_key(self.id_user)
-        return str(self.id_teilnehmer) + " - " + _user.lastname 
+        return str(self.id_teilnehmer) + " - " + _user.get_full_name()
+
+    def __str__(self):
+        _user = User.objects.get_by_natural_key(self.id_user)
+        return str(self.id_teilnehmer) + " - " + _user.get_full_name()
 
 class Teilnehmergruppe(models.Model):
     id_teilnehmergruppe = models.AutoField(primary_key=True)
@@ -151,18 +159,21 @@ class Teilnehmergruppe(models.Model):
     def __unicode__(self):
         return str(self.id_teilnehmergruppe) + " - " + self.name 
 
+    def __str__(self):
+        return str(self.id_teilnehmergruppe) + " - " + self.name 
+    
 class Kurs(models.Model):
     id_kurs = models.AutoField(primary_key=True)
     id_kunde = models.ForeignKey(Kunde)
     id_schulung = models.ForeignKey(Schulung)
     name =  models.CharField(max_length=25)
     beschreibung = models.TextField(blank=True, null=True)
-    id_kursinhalt = models.ManyToManyField(Kursinhalt)
-    id_dozent = models.ManyToManyField(Dozent)
-    id_teilnehmergruppe = models.ManyToManyField(Teilnehmergruppe)
-    id_raumauswahl = models.ManyToManyField(Raum)
+    id_kursinhalt = models.ManyToManyField(Kursinhalt)#, models.SET_NULL, blank=True, null=True, verbose_name=_(u'Kursinhalt'))
+    id_dozent = models.ManyToManyField(Dozent) #, models.SET_NULL, blank=True, null=True, verbose_name=_(u'Dozent'))
+    id_teilnehmergruppe = models.ManyToManyField(Teilnehmergruppe)#, models.SET_NULL, blank=True, null=True, verbose_name=_(u'Teilnehmergruppe'))
+    id_raumauswahl = models.ManyToManyField(Raum) #, models.SET_NULL, blank=True, null=True, verbose_name=_(u'Raum'))
     dauer = models.IntegerField(help_text= _(u"Dauer in Stunden"), blank=True, null=True)
-    id_vorkurs = models.ForeignKey('self')
+    id_vorkurs = models.ForeignKey('self') #, models.SET_NULL, blank=True, null=True, verbose_name=_(u'Vorkurs'))
     STATUS =  (
                ('01', _(u'Inhalte planen')),
                ('02', _(u'Dozenten planen')),
@@ -176,6 +187,9 @@ class Kurs(models.Model):
         verbose_name_plural = _(u'Kurse')
 
     def __unicode__(self):
+        return str(self.id_kurs) + " - " + self.name 
+    
+    def __str__(self):
         return str(self.id_kurs) + " - " + self.name 
     
 class Kurstermin(models.Model):
